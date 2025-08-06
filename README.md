@@ -7,7 +7,7 @@ Collection of scripts demonstrating different optimization and fine-tuning techn
 **Resources**
 
 - [Blog - Welcome GPT-OSS: the new open-source model family from OpenAI](https://huggingface.co/blog/welcome-openai-gpt-oss)
-- [Cookbook - Fine-tuning with GPT-OSS and Hugging Face](https://cookbook.openai.com/articles/gpt-oss/fine-tune-transfomers)
+- [Cookbook - Fine-tuning with GPT-OSS and Hugging Face](https://cookbook.openai.com/articles/gpt-oss/fine-tune-transformers)
 - [OpenAI GPT-OSS 20B model](https://huggingface.co/openai/gpt-oss-20b)
 - [OpenAI GPT-OSS 120B model](https://huggingface.co/openai/gpt-oss-120b)
 - [Release collection on Hugging Face](https://huggingface.co/collections/openai/gpt-oss-68911959590a1634ba11c7a4)
@@ -52,7 +52,7 @@ If your hardware supports the MXFP4 quantization format, you can also install Tr
 uv pip install git+https://github.com/triton-lang/triton.git@main#subdirectory=python/triton_kernels
 ```
 
-Finall install the remaining dependencies:
+Finally install the remaining dependencies:
 
 ```sh
 uv pip install -r requirements.txt
