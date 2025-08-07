@@ -20,6 +20,13 @@ Collection of scripts demonstrating different optimization and fine-tuning techn
 - `generate_all.py` - Model with all optimizations: Expert Parallelism, Tensor Parallelism, Flash Attention.
 - `sft.py` - Script for fine-tuning the model using supervised fine-tuning (SFT). Supports both full-parameter training and LoRA training.
 
+### Machine Translation Recipe
+
+- `machine_translation.py` - Fine-tune GPT-OSS models for machine translation with instruction-based training
+- `generate_translation.py` - Inference script for machine translation with domain-specific prompts
+- `evaluate_translation.py` - Comprehensive evaluation using BLEU, chrF, TER, and COMET metrics
+- See `MACHINE_TRANSLATION_README.md` for detailed usage instructions
+
 ### Model Configuration
 
 All generation scripts support both 20B and 120B models. To switch between model sizes, simply edit the `model_path` variable at the top of each script:
