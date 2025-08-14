@@ -19,7 +19,7 @@ accelerate launch \
     --config configs/sft_lora.yaml \
     --model_name_or_path openai/gpt-oss-20b \
     --packing true packing_strategy wrapped \
-    --run_name 20b-full-eager \
+    --run_name 20b-full-kernels \
     --attn_implementation kernels-community/vllm-flash-attn3
 """
 
