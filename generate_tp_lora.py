@@ -3,6 +3,8 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
 from peft import PeftModel
 
+# torchrun --nproc_per_node=8 generate_tp_lora.py (assuming you train with TP=8)
+
 # --- Configuration ---
 # Path to your saved PEFT adapter (after you finetuned)
 adapter_path = "/fsx/ferdinandmom/ferdinand-hf/gpt-oss-recipes/gpt-oss-20b-multilingual-reasoner"
