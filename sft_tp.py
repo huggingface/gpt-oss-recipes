@@ -62,18 +62,18 @@ def main(script_args, training_args, model_args):
     # --------------
     # Load dataset
     # --------------
-    dataset = load_dataset(script_args.dataset_name, name=script_args.dataset_config)
+    dataset = load_dataset(script_args.dataset_name, name=script_args.dataset_config, split=script_args.dataset_train_split)
+    dataset = dataset.select(range(int(len(dataset) * 0.1)))
 
     # -------------
     # Train model
     # -------------
+    training_args.report_to = "wandb"
+
     trainer = SFTTrainer(
         model=model,
         args=training_args,
-        train_dataset=dataset[script_args.dataset_train_split],
-        eval_dataset=dataset[script_args.dataset_test_split]
-        if training_args.eval_strategy != "no"
-        else None,
+        train_dataset=dataset,
         processing_class=tokenizer,
         peft_config=get_peft_config(model_args),
     )
