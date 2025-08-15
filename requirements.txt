@@ -3,3 +3,4 @@ peft>=0.17.0
 trl>=0.21.0
 trackio
 transformers>=4.55.0
+accelerate==1.9.0
