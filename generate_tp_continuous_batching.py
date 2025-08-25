@@ -69,20 +69,35 @@ model = AutoModelForCausalLM.from_pretrained(
 
 model.eval()
 
-# Tokenize the batch of prompts
-inputs = tokenizer(chat_prompts, return_tensors="pt", padding=True).to("cuda")
+# Tokenize the batch of prompts for generate_batch (expects list of input_ids)
+tokenized_inputs = tokenizer(chat_prompts, padding=True)
+batch_input_ids = [input_ids for input_ids in tokenized_inputs["input_ids"]]
 
 print(f"Processing batch of {len(chat_prompts)} prompts...")
 print("=" * 80)
 
 # Generate responses for all prompts in the batch using continuous batching
-outputs = model.generate_batch(**inputs, generation_config=generation_config)
+batch_outputs = model.generate_batch(
+    inputs=batch_input_ids,
+    generation_config=generation_config,
+)
 
 # Decode and print all responses
-for i, output in enumerate(outputs):
-    response = tokenizer.decode(output, skip_special_tokens=True)
+for i, request_id in enumerate(batch_outputs):
+    request_output = batch_outputs[request_id]
+    
+    # Decode the prompt
+    input_text = tokenizer.decode(request_output.prompt_ids, skip_special_tokens=True)
+    
+    # Decode the generated tokens
+    try:
+        output_text = tokenizer.decode(request_output.generated_tokens, skip_special_tokens=True)
+    except Exception as e:
+        print(f"Decoding failed for request {request_id}: {e}")
+        output_text = tokenizer.decode(request_output.generated_tokens[1:], skip_special_tokens=True)
+    
     # Extract just the assistant's response part
-    assistant_response = response.split("assistant\n")[-1].strip()
+    assistant_response = output_text.split("assistant\n")[-1].strip() if "assistant\n" in output_text else output_text.strip()
 
     print(f"Prompt {i + 1}: {batch_messages[i][0]['content'][:50]}...")
     print(f"Response {i + 1}: {assistant_response}")
