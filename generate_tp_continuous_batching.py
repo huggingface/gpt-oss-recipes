@@ -7,6 +7,10 @@ model_path = "openai/gpt-oss-120b"  # 120B model (default)
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding_side="left")
 
+# Ensure tokenizer has a pad token (required for batch processing)
+if tokenizer.pad_token is None:
+    tokenizer.pad_token = tokenizer.eos_token
+
 # Create a batch of different prompts
 batch_messages = [
     [
@@ -41,14 +45,22 @@ batch_messages = [
     ],
 ]
 
-# Apply chat template to each set of messages
-chat_prompts = [
-    tokenizer.apply_chat_template(messages, tokenize=False)
+# Apply chat template to each set of messages and tokenize in one step
+def tokenize_function(messages):
+    chat_prompt = tokenizer.apply_chat_template(messages, tokenize=False)
+    return tokenizer(chat_prompt)
+
+# Process all messages and get input_ids
+batch_input_ids = [
+    tokenize_function(messages)["input_ids"] 
     for messages in batch_messages
 ]
 
 generation_config = GenerationConfig(
     max_new_tokens=1000,
+    eos_token_id=tokenizer.eos_token_id,
+    pad_token_id=tokenizer.pad_token_id,
+    do_sample=False,  # Use greedy decoding by default
 )
 
 device_map = (
@@ -69,11 +81,9 @@ model = AutoModelForCausalLM.from_pretrained(
 
 model.eval()
 
-# Tokenize the batch of prompts for generate_batch (expects list of input_ids)
-tokenized_inputs = tokenizer(chat_prompts, padding=True)
-batch_input_ids = [input_ids for input_ids in tokenized_inputs["input_ids"]]
+# batch_input_ids is already prepared above with chat template applied
 
-print(f"Processing batch of {len(chat_prompts)} prompts...")
+print(f"Processing batch of {len(batch_input_ids)} prompts...")
 print("=" * 80)
 
 # Generate responses for all prompts in the batch using continuous batching
