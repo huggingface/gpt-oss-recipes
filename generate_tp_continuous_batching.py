@@ -73,8 +73,6 @@ device_map = (
 
 model = AutoModelForCausalLM.from_pretrained(
     model_path,
-    torch_dtype=torch.bfloat16,
-    use_kernels=True,
     attn_implementation="paged_attention|kernels-community/vllm-flash-attn3",
     **device_map,
 )
