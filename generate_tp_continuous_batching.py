@@ -75,8 +75,8 @@ inputs = tokenizer(chat_prompts, return_tensors="pt", padding=True).to("cuda")
 print(f"Processing batch of {len(chat_prompts)} prompts...")
 print("=" * 80)
 
-# Generate responses for all prompts in the batch
-outputs = model.generate(**inputs, generation_config=generation_config)
+# Generate responses for all prompts in the batch using continuous batching
+outputs = model.generate_batch(**inputs, generation_config=generation_config)
 
 # Decode and print all responses
 for i, output in enumerate(outputs):
